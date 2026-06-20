@@ -22,11 +22,17 @@ ARSEK_KISILIGI = (
 
 # Sohbet geçmişini ve modeli hafızada tutalım
 if "chat_session" not in st.session_state:
-    # Google API kütüphanelerinin tamamında stabil çalışan modele çektik
-    model = genai.GenerativeModel(
-        model_name="gemini-pro", 
-        system_instruction=ARSEK_KISILIGI
-    )
+    # NotFound hatasını engellemek için doğrudan en temel model ismini text-generation olarak çağırıyoruz
+    try:
+        model = genai.GenerativeModel(
+            model_name="gemini-1.0-pro", 
+            system_instruction=ARSEK_KISILIGI
+        )
+    except:
+        model = genai.GenerativeModel(
+            model_name="text-bison-001", 
+            system_instruction=ARSEK_KISILIGI
+        )
     st.session_state.chat_session = model.start_chat(history=[])
 
 # Eski mesajları ekrana yazdır
@@ -38,13 +44,14 @@ for message in st.session_state.chat_session.history:
 
 # Kullanıcıdan girdi al
 if user_input := st.chat_input("Arsek'e bir şey söyle..."):
-    # Kullanıcın mesajını ekranda göster
     with st.chat_message("user", avatar="👤"):
         st.write(user_input)
     
-    # Arsek'ten cevap al ve ekranda göster
     with st.chat_message("assistant", avatar="🤖"):
         with st.spinner("Veriler analiz ediliyor..."):
-            response = st.session_state.chat_session.send_message(user_input)
-            st.write(response.text)
-            
+            try:
+                response = st.session_state.chat_session.send_message(user_input)
+                st.write(response.text)
+            except Exception as e:
+                st.error(f"Google API Bağlantı Hatası: {e}\nLütfen API Anahtarınızı kontrol edin veya modeli güncelleyin.")
+                
