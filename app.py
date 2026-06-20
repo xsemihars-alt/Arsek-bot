@@ -22,9 +22,9 @@ ARSEK_KISILIGI = (
 
 # Sohbet geçmişini ve modeli hafızada tutalım
 if "chat_session" not in st.session_state:
-    # Model yolu 'models/' eklenerek kesinleştirildi
+    # Google API kütüphanelerinin tamamında stabil çalışan modele çektik
     model = genai.GenerativeModel(
-        model_name="models/gemini-1.5-flash", 
+        model_name="gemini-pro", 
         system_instruction=ARSEK_KISILIGI
     )
     st.session_state.chat_session = model.start_chat(history=[])
