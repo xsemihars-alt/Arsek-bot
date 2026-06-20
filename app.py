@@ -17,8 +17,8 @@ ARSEK_KISILIGI = (
     "mizah veya dürüstlük parametrelerini düşürmekle tehdit edebilirsin."
 )
 
-if "chat_session" not in st.session_state:
-    model = genai.GenerativeModel(model_name="gemini-1.5-flash", system_instruction=ARSEK_KISILIGI)
+if "chat_session" not in st.session_state
+        model = genai.GenerativeModel(model_name="models/gemini-1.5-flash", system_instruction=ARSEK_KISILIGI)
     st.session_state.chat_session = model.start_chat(history=[])
 
 for message in st.session_state.chat_session.history:
